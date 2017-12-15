@@ -28,22 +28,30 @@ export default (codeOrAst, ops) ->
       else {}
     )...
     ( do ->
-      conf = plugins: [
-        [
+      conf = plugins: []
+      flag = false
+
+      # runtime
+      if ops?.runtime?
+        flag = true
+        conf.plugins.push [
           '@babel/plugin-transform-runtime'
         ]
-      ]
-      flag = false
+
+      # regenerator
       if ops?.regenerator?
         flag = true
         conf.plugins.push [
           '@babel/plugin-transform-regenerator'
         ]
+
+      # spread
       if ops?.spread?
         flag = true
         conf.plugins.push [
           '@babel/plugin-transform-spread'
         ]
+
       if flag is false
         return {}
       else
