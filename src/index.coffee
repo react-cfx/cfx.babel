@@ -1,24 +1,54 @@
-import { transformSync } from '@babel/core'
+import {
+  transformSync
+  transformFromAst
+} from '@babel/core'
 
-export default (code) ->
+export default (codeOrAst, ops) ->
 
-  es5 = transformSync code
-  ,
-    presets: [
-      [
-        'env'
-        targets:
-          node: true
+  transform =
+    if typeof codeOrAst is 'string'
+    then transformSync
+    else (ast, options) ->
+      transformFromAst ast, ''
+      , options
+
+  es5 = transform codeOrAst
+  , {
+    (
+      if ops?.preset?
+      then (
+        presets: [
+          [
+            '@babel/preset-env'
+            targets:
+              node: true
+          ]
+        ]
+      )
+      else {}
+    )...
+    ( do ->
+      conf = plugins: [
+        [
+          '@babel/plugin-transform-runtime'
+        ]
       ]
-    ]
-  ,
-    plugins: [
-      [
-        '@babel/plugin-transform-runtime'
-        {
-          "moduleName": "@babel/runtime"
-        }
-      ]
-    ]
+      flag = false
+      if ops?.regenerator?
+        flag = true
+        conf.plugins.push [
+          '@babel/plugin-transform-regenerator'
+        ]
+      if ops?.spread?
+        flag = true
+        conf.plugins.push [
+          '@babel/plugin-transform-spread'
+        ]
+      if flag is false
+        return {}
+      else
+        return conf
+    )...
+  }
 
   es5.code

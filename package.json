@@ -1,6 +1,6 @@
 {
   "name": "cfx.babel",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/bundle.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -10,17 +10,20 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
-    "@babel/core": "^7.0.0-beta.32",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.32",
-    "@babel/preset-env": "^7.0.0-beta.32",
-    "@babel/runtime": "^7.0.0-beta.32",
+    "@babel/core": "^7.0.0-beta.34",
+    "@babel/plugin-transform-regenerator": "^7.0.0-beta.34",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.34",
+    "@babel/plugin-transform-spread": "^7.0.0-beta.34",
+    "@babel/preset-env": "^7.0.0-beta.34",
+    "@babel/runtime": "^7.0.0-beta.34",
     "cfx.rollup-plugin-coffee2": "^0.1.0",
-    "rollup": "^0.52.0",
+    "rollup": "^0.52.1",
     "rollup-plugin-cleanup": "^2.0.0"
   },
   "devDependencies": {
+    "babylon": "^6.18.0",
     "coffee-require": "^0.0.4",
-    "coffeescript": "^2.0.3",
+    "coffeescript": "^2.1.0",
     "ddeyes": "^0.0.4",
     "shelljs": "^0.7.8"
   }
