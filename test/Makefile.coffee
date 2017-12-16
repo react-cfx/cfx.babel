@@ -42,9 +42,10 @@ target.async = ->
   
   es5 = es6ToEs5 es6
   ,
-    # presets: true
-    regenerator: true
-    spread: true
+    presets: 2015
+    # runtime: true
+    # regenerator: true
+    # spread: true
 
   console.log es5
 

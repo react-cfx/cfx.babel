@@ -1,3 +1,4 @@
+import dd from 'ddeyes'
 import {
   transformSync
   transformFromAst
@@ -15,11 +16,13 @@ export default (codeOrAst, ops) ->
   es5 = transform codeOrAst
   , {
     (
-      if ops?.preset?
+      if ops?.presets?
       then (
+        if typeof ops.presets is 'number'
+          ops.presets = "es#{ops.presets}"
         presets: [
           [
-            '@babel/preset-env'
+            "@babel/preset-#{ops.presets}"
             targets:
               node: true
           ]
