@@ -13,20 +13,36 @@ export default (codeOrAst, ops) ->
       transformFromAst ast, ''
       , options
 
-  es5 = transform codeOrAst
-  , {
+  prefixEsNumber = (_Number) ->
+    if typeof _Number is 'number'
+    then "es#{_Number}"
+    else _Number
+    # targets:
+    #   node: true
+
+  options = {
     (
       if ops?.presets?
       then (
-        if typeof ops.presets is 'number'
-          ops.presets = "es#{ops.presets}"
-        presets: [
-          [
-            "@babel/preset-#{ops.presets}"
-            targets:
-              node: true
+        if Array.isArray ops.presets
+        then (
+          presets:
+            ops.presets.reduce (r, c) ->
+              [
+                r...
+                [
+                  "@babel/preset-#{prefixEsNumber c}"
+                ]
+              ]
+            , []
+        )
+        else (
+          presets: [
+            [
+              "@babel/preset-#{prefixEsNumber ops.presets}"
+            ]
           ]
-        ]
+        )
       )
       else {}
     )...
@@ -55,11 +71,26 @@ export default (codeOrAst, ops) ->
           '@babel/plugin-transform-spread'
         ]
 
+      # commonjs
+      if ops?.commonjs?
+        flag = true
+        conf.plugins.push [
+          '@babel/plugin-transform-modules-commonjs'
+          (
+            if typeof ops.commonjs is 'object'
+            then [ ops.commonjs ]
+            else []
+          )...
+        ]
+
       if flag is false
         return {}
       else
         return conf
     )...
   }
+
+  es5 = transform codeOrAst
+  , options
 
   es5.code

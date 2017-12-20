@@ -60,3 +60,23 @@ target.ast = ->
     # presets: true
     regenerator: true
     spread: true
+
+target.default = ->
+  code = """
+  import num from 'num';
+  export default 42;
+  """
+
+  es5 = es6ToEs5 code
+  ,
+    presets: [
+      2015
+      2016
+      2017
+    ]
+    runtime: true
+    commonjs: 
+      noInterop: true
+
+  console.log es5
+
