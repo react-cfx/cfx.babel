@@ -37,11 +37,19 @@ export default (codeOrAst, ops) ->
             , []
         )
         else (
-          presets: [
+          presets: (Object.keys ops.presets).reduce (r, k) ->
             [
-              "@babel/preset-#{prefixEsNumber ops.presets}"
+              r...
+              [
+                "@babel/preset-#{prefixEsNumber k}"
+                (
+                  if typeof ops.presets["#{k}"] is 'object'
+                  then [ ops.presets["#{k}"] ]
+                  else []
+                )...
+              ]
             ]
-          ]
+          , []
         )
       )
       else {}
@@ -55,6 +63,7 @@ export default (codeOrAst, ops) ->
         flag = true
         conf.plugins.push [
           '@babel/plugin-transform-runtime'
+          moduleName: '@babel/runtime'
         ]
 
       # regenerator
